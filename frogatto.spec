@@ -15,7 +15,7 @@ Patch1: frogatto-1.0-asneeded.patch
 
 
 # Automatically added by buildreq on Thu Aug 26 2010
-BuildRequires: boost-devel gcc-c++ libSDL_image-devel libSDL_mixer-devel libSDL_ttf-devel libglew-devel libpng-devel ccache
+BuildRequires: boost-devel gcc-c++ libSDL_image-devel libSDL_mixer-devel libSDL_ttf-devel libglew-devel libpng-devel ccache glibc-devel
 
 
 Requires: %name-gamedata = %version
