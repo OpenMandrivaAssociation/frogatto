@@ -1,8 +1,7 @@
 
 Name: frogatto
-Version: 1.0.2
+Version: 1.1
 Release: %mkrel 1
-Packager: Vicror Forsiuk <force@altlinux.org>
 Summary: Frogatto & Friends classic adventure game
 License: GPLv3+
 Group: Games/Arcade
