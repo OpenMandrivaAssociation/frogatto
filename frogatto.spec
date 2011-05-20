@@ -49,15 +49,15 @@ install -pDm 755 game %buildroot%_libdir/frogatto/game
 cp -a images data music sounds %buildroot%_datadir/frogatto
 
 install -pDm 755 %_sourcedir/frogatto %buildroot%_gamesbindir/frogatto
-install -pDm 644 %_sourcedir/frogatto.desktop %buildroot%_desktopdir/frogatto.desktop
+install -pDm 644 %_sourcedir/frogatto.desktop %buildroot%{_datadir}/applications/frogatto.desktop
 install -pDm 644 %_sourcedir/frogatto.xpm %buildroot%{_pixmaps}/frogatto.xpm
 install -pDm 644 %_sourcedir/frogatto.6 %buildroot%{_mandir}/man6/frogatto.6
 
 %files
 %_gamesbindir/*
 %_libdir/frogatto/
-%_desktopdir/*
-# %{_pixmaps}/*
+%{_datadir}/applications/*
+#%{_pixmaps}/*
 %{_mandir}/man6/*
 
 %files gamedata
