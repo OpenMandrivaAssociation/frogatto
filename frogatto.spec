@@ -1,7 +1,7 @@
 
 Name: frogatto
 Version: 1.1
-Release: 2
+Release: 3
 Summary: Frogatto & Friends classic adventure game
 License: GPLv3+
 Group: Games/Arcade
@@ -36,9 +36,8 @@ BuildArch: noarch
 Game data for frogatto.
 
 %prep
-%setup
-# %patch1 -p1
-#subst 's/ccache //' Makefile
+%setup -q
+sed -i -e 's#BINARY_FILE=.*#BINARY_FILE=%{_libdir}/frogatto/game#g' %{SOURCE1}
 
 %build
 %make
