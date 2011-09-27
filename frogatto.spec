@@ -1,24 +1,21 @@
-
 Name: frogatto
-Version: 1.1
-Release: 3
+Version: 1.1.1
+Release: 1
 Summary: Frogatto & Friends classic adventure game
 License: GPLv3+
 Group: Games/Arcade
 URL: http://www.frogatto.com/
-Source: http://www.frogatto.com/files/frogatto-%version.tar.bz2
+Source: http://www.frogatto.com/files/frogatto-%{version}.tar.xz
 Source1: frogatto
 Source2: frogatto.desktop
 Source3: frogatto.xpm
 Source4: frogatto.6
 Patch1: frogatto-1.0-asneeded.patch
 
-
 # Automatically added by buildreq on Thu Aug 26 2010
 BuildRequires: boost-devel gcc-c++ libSDL_image-devel libSDL_mixer-devel libSDL_ttf-devel libglew-devel libpng-devel ccache glibc-devel
 
-
-Requires: %name-gamedata = %version
+Requires: %{name}-gamedata = %{version}
 
 %description
 Frogatto & Friends is a old-school 2d platformer game, starring a certain
@@ -43,23 +40,27 @@ sed -i -e 's#BINARY_FILE=.*#BINARY_FILE=%{_libdir}/frogatto/game#g' %{SOURCE1}
 %make
 
 %install
-install -d %buildroot%_datadir/frogatto
-install -pDm 755 game %buildroot%_libdir/frogatto/game
-cp -a images data music sounds %buildroot%_datadir/frogatto
+rm -rf %{buildroot}
+install -d %{buildroot}%{_datadir}/frogatto
+install -pDm 755 game %{buildroot}%{_libdir}/frogatto/game
+cp -a images data music sounds %{buildroot}%{_datadir}/frogatto
 
-install -pDm 755 %_sourcedir/frogatto %buildroot%_gamesbindir/frogatto
-install -pDm 644 %_sourcedir/frogatto.desktop %buildroot%{_datadir}/applications/frogatto.desktop
-install -pDm 644 %_sourcedir/frogatto.xpm %buildroot%{_pixmaps}/frogatto.xpm
-install -pDm 644 %_sourcedir/frogatto.6 %buildroot%{_mandir}/man6/frogatto.6
+install -pDm 755 %{_sourcedir}/frogatto %{buildroot}%{_gamesbindir}/frogatto
+install -pDm 644 %{_sourcedir}/frogatto.desktop %{buildroot}%{_datadir}/applications/frogatto.desktop
+install -pDm 644 %{_sourcedir}/frogatto.xpm %{buildroot}%{_datadir}/pixmaps/frogatto.xpm
+install -pDm 644 %{_sourcedir}/frogatto.6 %{buildroot}%{_mandir}/man6/frogatto.6
+
+%clean
+rm -rf %{buildroot}
 
 %files
-%_gamesbindir/*
-%_libdir/frogatto/
+%{_gamesbindir}/*
+%{_libdir}/frogatto/
 %{_datadir}/applications/*
-#%{_pixmaps}/*
+%{_datadir}/pixmaps/*
 %{_mandir}/man6/*
 
 %files gamedata
 %doc LICENSE
-%_datadir/frogatto
+%{_datadir}/frogatto
 
