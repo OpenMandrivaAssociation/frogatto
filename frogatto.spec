@@ -1,6 +1,6 @@
 Name: frogatto
 Version: 1.1.1
-Release: 1
+Release: 2
 Summary: Frogatto & Friends classic adventure game
 License: GPLv3+
 Group: Games/Arcade
@@ -11,6 +11,7 @@ Source2: frogatto.desktop
 Source3: frogatto.xpm
 Source4: frogatto.6
 Patch1: frogatto-1.0-asneeded.patch
+Patch2: frogatto-1.1.1-libpng.patch
 
 # Automatically added by buildreq on Thu Aug 26 2010
 BuildRequires: boost-devel gcc-c++ libSDL_image-devel libSDL_mixer-devel libSDL_ttf-devel libglew-devel libpng-devel ccache glibc-devel
@@ -34,6 +35,7 @@ Game data for frogatto.
 
 %prep
 %setup -q
+%patch2 -p1
 sed -i -e 's#BINARY_FILE=.*#BINARY_FILE=%{_libdir}/frogatto/game#g' %{SOURCE1}
 
 %build
