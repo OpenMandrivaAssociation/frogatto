@@ -1,17 +1,18 @@
-Name: frogatto
-Version: 1.1.1
-Release: 2
-Summary: Frogatto & Friends classic adventure game
-License: GPLv3+
-Group: Games/Arcade
-URL: http://www.frogatto.com/
-Source: http://www.frogatto.com/files/frogatto-%{version}.tar.bz2
-Source1: frogatto
-Source2: frogatto.desktop
-Source3: frogatto.xpm
-Source4: frogatto.6
-Patch1: frogatto-1.0-asneeded.patch
-Patch2: frogatto-1.1.1-libpng.patch
+Name:		frogatto
+Version:	1.1.1
+Release:	2
+Summary:	Frogatto & Friends classic adventure game
+License:	GPLv3+
+Group:		Games/Arcade
+URL:		http://www.frogatto.com/
+Source:		http://www.frogatto.com/files/frogatto-%{version}.tar.bz2
+Source1:	frogatto
+Source2:	frogatto.desktop
+Source3:	frogatto.xpm
+Source4:	frogatto.6
+Patch1:		frogatto-1.0-asneeded.patch
+Patch2:		frogatto-1.1.1-libpng.patch
+BuildRoot:	{_tmppath}/%{name}-%{version}-build
 
 # Automatically added by buildreq on Thu Aug 26 2010
 BuildRequires: boost-devel gcc-c++ libSDL_image-devel libSDL_mixer-devel libSDL_ttf-devel libglew-devel libpng-devel ccache glibc-devel
@@ -56,6 +57,7 @@ install -pDm 644 %{_sourcedir}/frogatto.6 %{buildroot}%{_mandir}/man6/frogatto.6
 rm -rf %{buildroot}
 
 %files
+%defattr(-,root,root)
 %{_gamesbindir}/*
 %{_libdir}/frogatto/
 %{_datadir}/applications/*
@@ -63,6 +65,7 @@ rm -rf %{buildroot}
 %{_mandir}/man6/*
 
 %files gamedata
+%defattr(-,root,root)
 %doc LICENSE
 %{_datadir}/frogatto
 
