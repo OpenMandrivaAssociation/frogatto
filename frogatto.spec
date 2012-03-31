@@ -1,6 +1,6 @@
 Name:		frogatto
 Version:	1.2
-Release:	1
+Release:	2
 Summary:	Frogatto & Friends classic adventure game
 License:	GPLv3+
 Group:		Games/Arcade
@@ -19,7 +19,7 @@ BuildRequires:	SDL_mixer-devel
 BuildRequires:	SDL_ttf-devel
 BuildRequires:	glew-devel
 BuildRequires:	png-devel
-BuildRequires:	ccache
+#BuildRequires:	ccache
 BuildRequires:	glibc-devel
 
 Requires: %{name}-gamedata = %{version}
@@ -41,21 +41,22 @@ Game data for frogatto.
 
 %prep
 %setup -q -n %{name}-%{name}-64c84bf
-sed -i -e 's#BINARY_FILE=.*#BINARY_FILE=%{_libdir}/frogatto/game#g' %{SOURCE1}
 
 %build
-%make
+%make CC=%__cc CXX=%(echo %__cc |sed -e 's,gcc,g++,')
 
 %install
 %__rm -rf %{buildroot}
 %__install -d %{buildroot}%{_datadir}/frogatto
+%__install -d %buildroot%_gamesbindir
 %__install -pDm 755 game %{buildroot}%{_libdir}/frogatto/game
 %__cp -a images data music sounds %{buildroot}%{_datadir}/frogatto
 
-%__install -pDm 755 %{_sourcedir}/frogatto %{buildroot}%{_gamesbindir}/frogatto
-%__install -pDm 644 %{_sourcedir}/frogatto.desktop %{buildroot}%{_datadir}/applications/frogatto.desktop
-%__install -pDm 644 %{_sourcedir}/frogatto.xpm %{buildroot}%{_datadir}/pixmaps/frogatto.xpm
-%__install -pDm 644 %{_sourcedir}/frogatto.6 %{buildroot}%{_mandir}/man6/frogatto.6
+sed -e 's#BINARY_FILE=.*#BINARY_FILE=%{_libdir}/frogatto/game#g' %{SOURCE1} >%buildroot%_gamesbindir/frogatto
+chmod 0755 %buildroot%_gamesbindir/frogatto
+%__install -pDm 644 %SOURCE2 %{buildroot}%{_datadir}/applications/frogatto.desktop
+%__install -pDm 644 %SOURCE3 %{buildroot}%{_datadir}/pixmaps/frogatto.xpm
+%__install -pDm 644 %SOURCE4 %{buildroot}%{_mandir}/man6/frogatto.6
 
 %clean
 %__rm -rf %{buildroot}
