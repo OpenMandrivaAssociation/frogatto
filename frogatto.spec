@@ -17,9 +17,10 @@ BuildRequires:	gcc-c++
 BuildRequires:	SDL_image-devel
 BuildRequires:	SDL_mixer-devel
 BuildRequires:	SDL_ttf-devel
-BuildRequires:	glew-devel
-BuildRequires:	png-devel
-#BuildRequires:	ccache
+BuildRequires:	pkgconfig(glu)
+BuildRequires:	pkgconfig(glew)
+BuildRequires:	pkgconfig(libpng)
+BuildRequires:	ccache
 BuildRequires:	glibc-devel
 
 Requires: %{name}-gamedata = %{version}
@@ -41,25 +42,20 @@ Game data for frogatto.
 
 %prep
 %setup -q -n %{name}-%{name}-64c84bf
+sed -i -e 's#BINARY_FILE=.*#BINARY_FILE=%{_libdir}/frogatto/game#g' %{SOURCE1}
 
 %build
-%make CC=%__cc CXX=%(echo %__cc |sed -e 's,gcc,g++,')
+%make
 
 %install
-%__rm -rf %{buildroot}
-%__install -d %{buildroot}%{_datadir}/frogatto
-%__install -d %buildroot%_gamesbindir
-%__install -pDm 755 game %{buildroot}%{_libdir}/frogatto/game
-%__cp -a images data music sounds %{buildroot}%{_datadir}/frogatto
+install -d %{buildroot}%{_datadir}/frogatto
+install -pDm 755 game %{buildroot}%{_libdir}/frogatto/game
+cp -a images data music sounds %{buildroot}%{_datadir}/frogatto
 
-sed -e 's#BINARY_FILE=.*#BINARY_FILE=%{_libdir}/frogatto/game#g' %{SOURCE1} >%buildroot%_gamesbindir/frogatto
-chmod 0755 %buildroot%_gamesbindir/frogatto
-%__install -pDm 644 %SOURCE2 %{buildroot}%{_datadir}/applications/frogatto.desktop
-%__install -pDm 644 %SOURCE3 %{buildroot}%{_datadir}/pixmaps/frogatto.xpm
-%__install -pDm 644 %SOURCE4 %{buildroot}%{_mandir}/man6/frogatto.6
-
-%clean
-%__rm -rf %{buildroot}
+install -pDm 755 %{SOURCE1} %{buildroot}%{_gamesbindir}/frogatto
+install -pDm 644 %{SOURCE2} %{buildroot}%{_datadir}/applications/frogatto.desktop
+install -pDm 644 %{SOURCE3} %{buildroot}%{_datadir}/pixmaps/frogatto.xpm
+install -pDm 644 %{SOURCE4} %{buildroot}%{_mandir}/man6/frogatto.6
 
 %files
 %{_gamesbindir}/*
