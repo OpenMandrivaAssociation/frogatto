@@ -1,27 +1,41 @@
+%global commit a7ef3bfa0c32df4852bf057fab969c1a080edf4d
+%global shortcommit %(c=%{commit}; echo ${c:0:7})
+
 Name:		frogatto
-Version:	1.2
+Version:	1.3.3
 Release:	2
 Summary:	Frogatto & Friends classic adventure game
 License:	GPLv3+
 Group:		Games/Arcade
 URL:		http://www.frogatto.com/
-# 1.2 is available at https://github.com/frogatto/frogatto/tarball/1.2 only
-Source:		http://www.frogatto.com/files/%{name}-%{name}-%{version}-0-g07a33cd.tar.gz
+Source:		https://github.com/frogatto/frogatto/archive/%{commit}/%{name}-%{version}-%{shortcommit}.tar.gz
 Source1:	frogatto
 Source2:	frogatto.desktop
-Source3:	frogatto.xpm
-Source4:	frogatto.6
-Patch1:		frogatto-1.0-asneeded.patch
-BuildRequires:	boost-devel
-BuildRequires:	gcc-c++
-BuildRequires:	SDL_image-devel
-BuildRequires:	SDL_mixer-devel
-BuildRequires:	SDL_ttf-devel
-BuildRequires:	pkgconfig(glu)
-BuildRequires:	pkgconfig(glew)
-BuildRequires:	pkgconfig(libpng)
-BuildRequires:	ccache
-BuildRequires:	glibc-devel
+Source3:	frogatto.pod
+# Patch Makefile not to link lSDLmain
+Patch0:         %{name}-1.2-Makefile.patch
+# Boost no longer has separate non mt and -mt variants of its libs
+Patch1:         %{name}-1.3-no-boost-mt.patch
+# Use FreeFont instead of the Ubuntu Font Family
+Patch2:         %{name}-1.3-fonts.patch
+
+BuildRequires:  boost-devel
+BuildRequires:  gcc-c++
+BuildRequires:  SDL-devel
+BuildRequires:  SDL_image-devel
+BuildRequires:  SDL_mixer-devel
+BuildRequires:  SDL_ttf-devel
+BuildRequires:  pkgconfig(glu)
+BuildRequires:  pkgconfig(glew)
+BuildRequires:  pkgconfig(libpng)
+BuildRequires:  ccache
+BuildRequires:  glibc-devel
+BuildRequires:  perl
+BuildRequires:  libicns-utils
+BuildRequires:  desktop-file-utils
+
+Requires:       hicolor-icon-theme
+Requires:       fonts-ttf-freefont
 
 Requires: %{name}-gamedata = %{version}
 
@@ -41,30 +55,71 @@ BuildArch:	noarch
 Game data for frogatto.
 
 %prep
-%setup -q -n %{name}-%{name}-64c84bf
+%setup -qn %{name}-%{commit}
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+
 sed -i -e 's#BINARY_FILE=.*#BINARY_FILE=%{_libdir}/frogatto/game#g' %{SOURCE1}
+
+# Fix locale file path
+sed -i 's!"./locale/"!"%{_datadir}/locale/"!' src/i18n.cpp
 
 %build
 %make
 
 %install
-install -d %{buildroot}%{_datadir}/frogatto
-install -pDm 755 game %{buildroot}%{_libdir}/frogatto/game
-cp -a images data music sounds %{buildroot}%{_datadir}/frogatto
-
+# Install wrapper script
+install -d %{buildroot}%{_gamesbindir}
 install -pDm 755 %{SOURCE1} %{buildroot}%{_gamesbindir}/frogatto
-install -pDm 644 %{SOURCE2} %{buildroot}%{_datadir}/applications/frogatto.desktop
-install -pDm 644 %{SOURCE3} %{buildroot}%{_datadir}/pixmaps/frogatto.xpm
-install -pDm 644 %{SOURCE4} %{buildroot}%{_mandir}/man6/frogatto.6
 
-%files
+# Install game and data
+install -d %{buildroot}%{_libdir}/%{name}
+install -m 755 -p game %{buildroot}%{_libdir}/%{name}
+install -d %{buildroot}%{_datadir}/%{name}/modules/%{name}
+cp -pr data images music *.cfg %{buildroot}%{_datadir}/%{name}
+pushd modules/%{name}
+cp -pr data images music sounds *.cfg \
+  %{buildroot}%{_datadir}/%{name}/modules/%{name}
+# Install translations
+  cp -pr locale %{buildroot}%{_datadir}
+popd
+
+# Install desktop file
+install -d %{buildroot}%{_datadir}/applications
+desktop-file-install \
+  --dir %{buildroot}%{_datadir}/applications \
+  %{SOURCE2}
+
+# Extract Mac OS X icons
+icns2png -x modules/%{name}/images/os/mac/icon.icns
+
+# Install icons
+for i in 16 32 128 256; do
+  install -d -m 755 %{buildroot}%{_datadir}/icons/hicolor/${i}x${i}/apps
+  install -m 644 icon_${i}x${i}x32.png \
+    %{buildroot}%{_datadir}/icons/hicolor/${i}x${i}/apps/%{name}.png
+done
+
+# Install man page
+install -d %{buildroot}%{_mandir}/man6
+pod2man --section=6 \
+  -center="RPM Fusion contributed man pages" \
+  -release="%{name} %{version}" \
+  -date="July 13th, 2010" \
+   %{SOURCE3} > %{buildroot}%{_mandir}/man6/%{name}.6
+
+%find_lang %{name}
+
+%files -f %{name}.lang
 %{_gamesbindir}/*
 %{_libdir}/%{name}/
 %{_datadir}/applications/*
-%{_datadir}/pixmaps/*
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_mandir}/man6/*
 
 %files gamedata
-%doc LICENSE
+%doc LICENSE modules/%{name}/CHANGELOG
 %{_datadir}/%{name}
+
 
