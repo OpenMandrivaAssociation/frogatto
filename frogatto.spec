@@ -3,7 +3,7 @@
 
 Name:		frogatto
 Version:	1.3.3
-Release:	2
+Release:	3
 Summary:	Frogatto & Friends classic adventure game
 License:	GPLv3+
 Group:		Games/Arcade
