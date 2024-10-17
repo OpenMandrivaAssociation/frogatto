@@ -7,7 +7,7 @@ Release:	3
 Summary:	Frogatto & Friends classic adventure game
 License:	GPLv3+
 Group:		Games/Arcade
-URL:		http://www.frogatto.com/
+URL:		https://www.frogatto.com/
 Source:		https://github.com/frogatto/frogatto/archive/%{commit}/%{name}-%{version}-%{shortcommit}.tar.gz
 Source1:	frogatto
 Source2:	frogatto.desktop
