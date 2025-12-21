@@ -19,6 +19,7 @@ Patch1:         %{name}-1.3-no-boost-mt.patch
 # Use FreeFont instead of the Ubuntu Font Family
 Patch2:         %{name}-1.3-fonts.patch
 
+BuildRequires:	make
 BuildRequires:  boost-devel
 BuildRequires:  gcc-c++
 BuildRequires:  SDL-devel
